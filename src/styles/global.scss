@@ -1,13 +1,12 @@
+@use 'functions' with (
+    $base-font-size: 16
+);
 @use "reset";
 @use "variables";
 @use "utilities";
 @use "typography";
 @use "breakpoints";
 @use "layout";
-
-@use 'functions' with (
-    $base-font-size: 16
-);
 
 :root {
   font-size: #{functions.$base-font-size}px;
@@ -23,54 +22,112 @@ body,
 
 body {
     background-color: variables.$background;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    padding: functions.rem(32) 0;
 }
 
+#app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: functions.rem(60);
+    padding: functions.rem(27.5);
+    width: 100%;
+}
 
-/* Example of using breakpoints
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: functions.rem(16);
+  text-align: center;
+  width: 100%;
+
+    &__title {
+        gap: functions.rem(0);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__title--light {
+        @include typography.text-preset-2;
+        color: variables.$grey-500;
+    }
+
+    &__title--bold {
+        @include typography.text-preset-1;
+        color: variables.$grey-500;
+    }
+
+    &__description {
+        @include typography.text-preset-4;
+        color: variables.$grey-500;
+        text-align: center;
+        width: 100%;
+    }
+
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: functions.rem(32);
+  width: 100%;
+
   .card {
-    width: 100%; // default mobile first design
+    display: flex;
+    flex-direction: column;
+    // align-items: center;
+    padding: functions.rem(32);
+    background-color: variables.$white;
+    border-radius: functions.rem(8);
+    box-shadow: 0 functions.rem(10) functions.rem(20) rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: functions.rem(314);
+    border-top: functions.rem(4) solid;
 
-    @include breakpoint(md) {
-        width: 50%; // tablet
+    &__title {
+      @include typography.text-preset-3;
+      color: variables.$grey-500;
+      padding-bottom: functions.rem(6);
+      text-align: left;
     }
-    @include breakpoint(lg) {
-        width: 33.33%; // desktop
-    }
-*/
 
-/* Example of using layout and breakpoints
+    &__description {
+      @include typography.text-preset-5;
+      color: variables.$grey-400;
+      width: 100%;
+      padding-bottom: functions.rem(32);
+      text-align: left;
+    }
 
-.card-container {
-  // Mobile layout (stacked cards)
-  @include layout.grid(1fr, auto, functions.rem(24));
-  
-  // Desktop layout (cross pattern)
-  @include breakpoints.breakpoint('lg') {
-    @include layout.grid(repeat(3, 1fr), repeat(4, auto), functions.rem(32));
-    
-    .card--supervisor {
-      grid-column: 1;
-      grid-row: 2 / 4;
+    &__icon {
+      align-self: end;
     }
-    
-    .card--team-builder {
-      grid-column: 2;
-      grid-row: 1 / 3;
+
+    &--supervisor {
+      border-top-color: variables.$cyan;
     }
-    
-    .card--karma {
-      grid-column: 2;
-      grid-row: 3 / 5;
+
+    &--team-builder {
+      border-top-color: variables.$red;
     }
-    
-    .card--calculator {
-      grid-column: 3;
-      grid-row: 2 / 4;
+
+    &--karma {
+      border-top-color: variables.$orange;
+    }
+
+    &--calculator {
+      border-top-color: variables.$blue;
     }
   }
 }
-*/
