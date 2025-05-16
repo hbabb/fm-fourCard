@@ -26,21 +26,23 @@ document.querySelector('#app').innerHTML = `
       <img class="card__icon" src="${supervisor}" alt="" />
     </article>
 
-    <article class="card card--team-builder">
-      <h2 class="card__title">Team Builder</h2>
-      <p class="card__description">
-        Scans our talent network to create the optimal team for your project
-      </p>
-      <img class="card__icon" src="${team}" alt="" />
-    </article>
+    <div class="cards__center">
+      <article class="card card--team-builder">
+        <h2 class="card__title">Team Builder</h2>
+        <p class="card__description">
+          Scans our talent network to create the optimal team for your project
+        </p>
+        <img class="card__icon" src="${team}" alt="" />
+      </article>
 
-    <article class="card card--karma">
-      <h2 class="card__title">Karma</h2>
-      <p class="card__description">
-        Regularly evaluates our talent to ensure quality
-      </p>
-      <img class="card__icon" src="${karma}" alt="" />
-    </article>
+      <article class="card card--karma">
+        <h2 class="card__title">Karma</h2>
+        <p class="card__description">
+          Regularly evaluates our talent to ensure quality
+        </p>
+        <img class="card__icon" src="${karma}" alt="" />
+      </article>
+    </div>
 
     <article class="card card--calculator">
       <h2 class="card__title">Calculator</h2>

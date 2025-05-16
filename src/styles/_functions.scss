@@ -1,4 +1,5 @@
 @use "sass:math";
+@use "sass:map";
 
 // Define a base font size
 $base-font-size: 16 !default;
@@ -7,3 +8,98 @@ $base-font-size: 16 !default;
 @function rem($px) {
     @return math.div($px, $base-font-size) * 1rem;
 }
+
+// Simplified the standard breakpoints for this project (see https://github.com/hbabb/devkit) for full breakpoints
+$breakpoints: (
+    mobile: rem(320),
+    tablet: rem(768),
+    desktop: rem(1440)
+);
+
+/**
+ * Creates smooth scaling between breakpoints for any CSS property
+ * 
+ * @param {number} $min-value - Value at smallest breakpoint (in px)
+ * @param {number} $max-value - Value at largest breakpoint (in px)
+ * @param {string} $min-breakpoint - Starting breakpoint name (e.g., 'sm')
+ * @param {string} $max-breakpoint - Ending breakpoint name (e.g., 'md')
+ */
+@function fluid-scale($min-value, $max-value, $min-breakpoint: 'mobile', $max-breakpoint: 'tablet') {
+  // Get breakpoint values using your existing map
+  $min-width: map.get($breakpoints, $min-breakpoint);
+  $max-width: map.get($breakpoints, $max-breakpoint);
+  
+  // Convert to plain numbers for calculation by removing 'rem' unit
+  $min-width-num: $min-width / (1rem);
+  $max-width-num: $max-width / (1rem);
+  
+  // Calculate the growth rate
+  $growth-rate: ($max-value - $min-value) / ($max-width-num - $min-width-num);
+  
+  // Calculate the starting point
+  $starting-point: $min-value - ($growth-rate * $min-width-num);
+  
+  // Use your existing rem function
+  @return clamp(
+    rem($min-value),
+    rem($starting-point) + #{$growth-rate * 100}vw,
+    rem($max-value)
+  );
+}
+
+/**
+ * Enhanced breakpoint mixin with optional layout transitions
+ * 
+ * @param {string} $breakpoint - Breakpoint name from $breakpoints map
+ * @param {string} $layout-type - Optional layout type to switch to ('flex' or 'grid')
+ * @param {list} $columns - Grid columns configuration (for grid layout)
+ * @param {list} $gap - Gap size
+ */
+@mixin responsive($breakpoint, $layout-type: null, $columns: null, $gap: null) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    $value: map.get($breakpoints, $breakpoint);
+    
+    @media (min-width: $value) {
+      // Apply layout changes if specified
+      @if $layout-type == 'flex' {
+        display: flex;
+        flex-direction: if($columns == 'row', row, column);
+        @if $gap {
+          gap: rem($gap);
+        }
+      } @else if $layout-type == 'grid' and $columns {
+        display: grid;
+        grid-template-columns: $columns;
+        @if $gap {
+          gap: rem($gap);
+        }
+      }
+      
+      // Include other content
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint '#{$breakpoint}' not found in breakpoints map.";
+  }
+}
+
+/**
+* Spacing with fluid scaling
+*.container {
+* Padding scales from 16px to 32px between sm and md
+* padding: fluid-scale(16, 32);
+* 
+* Different layout at each breakpoint
+* display: flex;
+* flex-direction: column;
+* gap: functions.rem(16);
+* 
+* Switch to 2-column grid at tablet
+* @include responsive('md', 'grid', repeat(2, 1fr), 24) {
+* Additional tablet styles
+* }
+* 
+* Switch to 4-column grid at desktop
+* @include responsive('lg', 'grid', repeat(4, 1fr), 32) {}
+}
+*/
