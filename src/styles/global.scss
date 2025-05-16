@@ -1,13 +1,11 @@
+@use 'functions' with (
+    $base-font-size: 16
+);
 @use "reset";
 @use "variables";
 @use "utilities";
 @use "typography";
-@use "breakpoints";
 @use "layout";
-
-@use 'functions' with (
-    $base-font-size: 16
-);
 
 :root {
   font-size: #{functions.$base-font-size}px;
@@ -23,54 +21,206 @@ body,
 
 body {
     background-color: variables.$background;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    padding: functions.rem(32) 0;
 }
 
+#app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: functions.rem(60);
+    padding: functions.rem(27.5);
+    width: 100%;
+}
 
-/* Example of using breakpoints
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: functions.rem(16);
+  text-align: center;
+  width: 100%;
+  max-width: functions.rem(316);
+
+  // Media query to adjust the container width for the header
+  @include functions.responsive('tablet') {
+    max-width: functions.rem(540);
+  }
+
+    &__title {
+        gap: functions.rem(0);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__title--light {
+        @include typography.text-preset-2;
+        color: variables.$grey-500;
+
+        // Media query for font size change
+        @include functions.responsive('tablet') {
+          font-size: functions.rem(36);
+        }
+    }
+
+    &__title--bold {
+        @include typography.text-preset-1;
+        color: variables.$grey-500;
+
+        // Media query for font size change
+        @include functions.responsive('tablet') {
+          font-size: functions.rem(36);
+        }
+    }
+
+    &__description {
+        @include typography.text-preset-4;
+        color: variables.$grey-500;
+        text-align: center;
+        width: 100%;
+    }
+
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: functions.rem(32);
+  width: 100%;
+
+  // Add container query context
+  container-type: inline-size;
+  container-name: cards;
+
+  // Change to grid layout at tablet size
+  @include functions.responsive('tablet') {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: functions.rem(32);
+    width: 100%;
+    max-width: functions.rem(740);
+    justify-items: center;
+  }
+
+  // Change ot grid & flex for desktop
+  @include functions.responsive('desktop') {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    justify-items: center;
+    gap: functions.rem(32);
+    max-width: functions.rem(1114);
+    width: 100%;
+  }
+
   .card {
-    width: 100%; // default mobile first design
+    display: flex;
+    flex-direction: column;
+    padding: functions.rem(32);
+    background-color: variables.$white;
+    border-radius: functions.rem(8);
+    box-shadow: 0 functions.rem(10) functions.rem(20) rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: functions.rem(314);
+    border-top: functions.rem(4) solid;
 
-    @include breakpoint(md) {
-        width: 50%; // tablet
+    &__title {
+      @include typography.text-preset-3;
+      color: variables.$grey-500;
+      padding-bottom: functions.rem(6);
+      text-align: left;
     }
-    @include breakpoint(lg) {
-        width: 33.33%; // desktop
+
+    &__description {
+      @include typography.text-preset-5;
+      color: variables.$grey-400;
+      width: 100%;
+      padding-bottom: functions.rem(32);
+      text-align: left;
     }
-*/
 
-/* Example of using layout and breakpoints
+    &__icon {
+      align-self: end;
+    }
 
-.card-container {
-  // Mobile layout (stacked cards)
-  @include layout.grid(1fr, auto, functions.rem(24));
-  
-  // Desktop layout (cross pattern)
-  @include breakpoints.breakpoint('lg') {
-    @include layout.grid(repeat(3, 1fr), repeat(4, auto), functions.rem(32));
+    &--supervisor {
+      border-top-color: variables.$cyan;
+
+      @include functions.responsive('tablet') {
+        grid-column: span 2;
+        justify-self: center;
+      }
+
+      @include functions.responsive('desktop') {
+        grid-column: 1;
+        grid-row: 2;
+        justify-self: end;
+      }
+    }
     
-    .card--supervisor {
-      grid-column: 1;
-      grid-row: 2 / 4;
+    &--calculator {
+      border-top-color: variables.$blue;
+
+      @include functions.responsive('tablet') {
+        grid-column: span 2;
+        justify-self: center;
+      }
+
+      @include functions.responsive('desktop') {
+        grid-column: 3;
+        grid-row: 2;
+        justify-self: start;
+      }
     }
-    
-    .card--team-builder {
+
+    &--team-builder {
+      border-top-color: variables.$red;
+
+      @include functions.responsive('tablet') {
+        grid-column: 1;
+      }
+
+      @include functions.responsive('desktop') {
+        grid-column: auto;
+      }
+    }
+
+    &--karma {
+      border-top-color: variables.$orange;
+
+      @include functions.responsive('tablet') {
+        grid-column: 2;
+      }
+
+      @include functions.responsive('desktop') {
+        grid-column: auto;
+      }
+    }
+
+    @container cards (min-width: functions.rem(768)) {
+      max-width: 100%;
+    }
+  }
+
+  &__center {
+    display: contents;
+
+    @include functions.responsive('desktop') {
       grid-column: 2;
-      grid-row: 1 / 3;
-    }
-    
-    .card--karma {
-      grid-column: 2;
-      grid-row: 3 / 5;
-    }
-    
-    .card--calculator {
-      grid-column: 3;
-      grid-row: 2 / 4;
+      grid-row: 2;
+      display: flex;
+      flex-direction: column;
+      gap: functions.rem(32);
+      align-items: center;
     }
   }
 }
-*/
